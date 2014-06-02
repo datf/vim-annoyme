@@ -1,7 +1,7 @@
 " Vim global plugin for correcting anti-patterns
 " Last Change:	2014-06-02
 " Author:	David Tenreiro <https://github.com/datf>
-" Version:      0.03
+" Version:      0.04
 "
 " TODO: Consider adding a second delay as penalty for doing this... Like \<Esc>
 " TODO: echomsg instead of echoerr...
@@ -10,7 +10,6 @@
 " TODO: Restructure so mouse annoyance is not on the mapping Fn.
 " TODO: au CursorHoldI * if mode() == 'i' | echom 'Get me out of here! | endif
 " TODO: Should the plugin annoy you on other Vim anti-patterns?
-" TODO: Look into replace mode and note <BS> Is very useful there...
 "
 " Modes: {{{
 let s:modes = ['n', 'x', 's', 'o', 'i', 'v', '#', '@', '|', '~', 'c', 'l', '!']
@@ -110,6 +109,7 @@ let s:keymappings = { s:annoyme_on : {
                         \ '<S-PageUp>': ['CTRL-B'],
                         \ '<PageDown>': ['CTRL-F'],
                         \ '<S-PageDown>': ['CTRL-F'],
+                        \ '<MiddleMouse>': ['"+p', '"*p'],
                         \ '<ScrollWheelUp>': ['3CTRL-Y'],
                         \ '<M-ScrollWheelUp>': ['3CTRL-Y'],
                         \ '<S-ScrollWheelUp>': ['CTRL-B'],
@@ -118,9 +118,9 @@ let s:keymappings = { s:annoyme_on : {
                         \ '<M-ScrollWheelDown>': ['3CTRL-E'],
                         \ '<S-ScrollWheelDown>': ['CTRL-F'],
                         \ '<C-ScrollWheelDown>': ['CTRL-F'],
+                        \ '<Insert>': ['i', 'a', 'I', 'A', 'o', 'O', 'CTRL-O'],
                         \ '<Del>': ['x', 's', 'd', 'D', 'c', 'C'],
-                        \ '<Insert>': ['i', 'a', 'I', 'A', 'o', 'O'],
-                        \ '<BS>': ['X', 's', 'd', 'D', 'c', 'C']
+                        \ '<BS>': ['CTRL-H', 'X', 's', 'd', 'D', 'c', 'C']
                       \ }
                     \ }
 " }}}
@@ -205,4 +205,4 @@ silent call s:AnnoyMap()
 let &cpo = s:save_cpo
 unlet s:save_cpo
 
-" vim: sw=2 et ai fdm=marker cc=80
+" vim: sw=2 sts=2 et ai fdm=marker cc=80
