@@ -1,5 +1,3 @@
-let g:annoyme_errcmd = ":echoerr 'This is Vim! Use `%s` instead!'"
-
 source t/helpers/remaparrows.vim
 source plugin/annoyme.vim
 
