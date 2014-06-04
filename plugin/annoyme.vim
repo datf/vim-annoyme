@@ -1,12 +1,8 @@
 " Vim global plugin for correcting anti-patterns
 " Last Change:	2014-06-02
 " Author:	David Tenreiro <https://github.com/datf>
-" Version:      0.04
+" Version:      0.05
 "
-" TODO: Consider adding a second delay as penalty for doing this... Like \<Esc>
-" TODO: echomsg instead of echoerr...
-"       Change the mapping from execute to call a function that does:
-"       echohl ErrorMsg | echomsg 'yep' | echohl None
 " TODO: Restructure so mouse annoyance is not on the mapping Fn.
 " TODO: au CursorHoldI * if mode() == 'i' | echom 'Get me out of here! | endif
 " TODO: Should the plugin annoy you on other Vim anti-patterns?
@@ -40,9 +36,7 @@ set cpo&vim
 " }}}
 
 " Globals {{{
-let s:e_cmd = ":redraw \\\| " .
-              \ " :echoerr 'This is Vim! Use `%s` instead!' \\\| " .
-              \ " :normal \\<Esc>"
+let s:e_cmd = 'This is Vim! Use `%s` instead!'
 let s:annoyme_on = '@'
 let s:annoyme_mouse = 1
 
@@ -150,7 +144,8 @@ function! s:AnnoyMap() " {{{
         endif
         if !empty(s:keymappings[kmap][key])
            \ && empty(maparg(key, mapmreal, 0, 1))
-          let value = s:GenError(s:keymappings[kmap][key]) . '<CR>'
+          let value = ":AnnoyMeError " . kmap .
+                \ " " . key . "<CR>"
           if index(['i', 'v', 'x', 's'], mapmreal) >= 0
             let value = '<Esc>' . value
           endif
@@ -173,6 +168,21 @@ function! s:AnnoyMap() " {{{
   set visualbell
   let s:is_mapped = 1
 endfunction " }}}
+
+function! s:AnnoyMeErr(map, key)
+  if empty(a:map) || empty(a:key)
+        \ || !has_key(s:keymappings, a:map)
+        \ || !has_key(s:keymappings[a:map], a:key)
+    return
+  endif
+  redraw
+  echohl ErrorMsg
+  echomsg s:GenError(s:keymappings[a:map][a:key])
+  echohl None
+  normal \<Esc>
+  sleep 1
+endfunction
+command! -n=+ AnnoyMeError call <SID>AnnoyMeErr(<f-args>)
 
 function! s:AnnoyUnmap() " {{{
   if s:is_mapped == 0 | return | endif

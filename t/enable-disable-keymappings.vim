@@ -14,10 +14,7 @@ describe ':AnnoyMe'
     call cursor(4, 40)
     Expect getpos('.')[1:2] == [4, 40]
     for i in range(65, 70)
-      try
-        exe 'normal' printf("%c", i)
-      catch /This is Vim!/
-      endtry
+      exe 'normal' printf("%c", i)
       Expect getpos('.')[1:2] == [4, 40]
     endfor
   end
